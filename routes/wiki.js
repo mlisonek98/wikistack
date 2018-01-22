@@ -9,7 +9,7 @@ module.exports = router;
 
 
 router.post('/', function(req, res, next) {
-  res.json(req.body);
+  console.log(req.body)
   var pageTitle = req.body.title;
   var pageContent = req.body.content;
   var page = Page.build({
@@ -19,7 +19,7 @@ router.post('/', function(req, res, next) {
 
 
   page.save();
-  res.redirect('/');
+  res.json(page);
   //res.send('got to POST /wiki/');
 });
 

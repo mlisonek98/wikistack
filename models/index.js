@@ -10,19 +10,18 @@ const Page = db.define('page', {
   },
   urlTitle: {
     type: Sequelize.STRING,
-    allowNull: false,
-
+    allowNull: true,
   },
   content: {
     type: Sequelize.TEXT,
     allowNull: false,
   },
   status: {
-    type: Sequelize.ENUM('open', 'closed')
+    type: Sequelize.ENUM('open', 'closed'),
   },
   date: {
     type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW
+    defaultValue: Sequelize.NOW,
   }
 },
   {
@@ -32,10 +31,19 @@ const Page = db.define('page', {
     }
   }
 })
-Page.hook('beforeValidate',generateTitle(Page.title));
+
+Page.hook('beforeValidate', function (page) {
+  console.log(page.title);
+  if (!page.title) {
+    return Math.random().toString(36).substring(2, 7);
+  }
+  var spaces = /[' ']/g
+  var nonAlphanumeric = /\W/g
+  page.urlTitle = page.title.replace(spaces, '_').replace(nonAlphanumeric, '');
+});
 
 
-const User = db.define('task', {
+const User = db.define('user', {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -49,15 +57,16 @@ const User = db.define('task', {
   }
 })
 
-function generateTitle (title) {
-  if (!title) {
-    return Math.random().toString(36).substring(2, 7);
-  }
-  var spaces = /[' ']/g
-  var nonAlphanumeric = /\W/g
-  var url = title.replace(spaces, '_').replace(nonAlphanumeric, '');
-  return url;
-}
+// function generateTitle (title) {
+//   console.log(title);
+//   if (!title) {
+//     return Math.random().toString(36).substring(2, 7);
+//   }
+//   var spaces = /[' ']/g
+//   var nonAlphanumeric = /\W/g
+//   var url = title.replace(spaces, '_').replace(nonAlphanumeric, '');
+//   return url;
+// }
 
 module.exports = {
   db,
