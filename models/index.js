@@ -32,7 +32,7 @@ const Page = db.define('page', {
     }
   }
 })
-
+Page.hook('beforeValidate',generateTitle(Page.title));
 
 
 const User = db.define('task', {
@@ -48,6 +48,16 @@ const User = db.define('task', {
     }
   }
 })
+
+function generateTitle (title) {
+  if (!title) {
+    return Math.random().toString(36).substring(2, 7);
+  }
+  var spaces = /[' ']/g
+  var nonAlphanumeric = /\W/g
+  var url = title.replace(spaces, '_').replace(nonAlphanumeric, '');
+  return url;
+}
 
 module.exports = {
   db,
