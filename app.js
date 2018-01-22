@@ -6,6 +6,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var nunjucks = require('nunjucks');
 const models = require('./models/index.js');
+const routes = require('./routes');
 
 app.set('view engine', 'html'); // have res.render work with html files
 app.engine('html', nunjucks.render); // when giving html files to res.render, tell it to use nunjucks
@@ -17,6 +18,8 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+app.use('/', routes);
 
 models.db.sync({})
 .then(function () {
