@@ -26,8 +26,8 @@ const Page = db.define('page', {
 },
   {
     getterMethods: {
-    route(){
-      return '/wiki/' + this.getDataValue(this.urlTitle);
+    route() {
+      return '/wiki/' + this.urlTitle;
     }
   }
 })
@@ -51,22 +51,12 @@ const User = db.define('user', {
   email: {
     type: Sequelize.STRING,
     allowNull: false,
+    unique: true,
     validate: {
       isEmail: true
     }
   }
 })
-
-// function generateTitle (title) {
-//   console.log(title);
-//   if (!title) {
-//     return Math.random().toString(36).substring(2, 7);
-//   }
-//   var spaces = /[' ']/g
-//   var nonAlphanumeric = /\W/g
-//   var url = title.replace(spaces, '_').replace(nonAlphanumeric, '');
-//   return url;
-// }
 
 module.exports = {
   db,

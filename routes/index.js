@@ -7,6 +7,7 @@ const userRouter = require('./user.js');
 
 router.use('/wiki', wikiRouter);
 
-router.get('/', function(req,res,next){
-  res.render('index')
-})
+router.get('/', function(req, res, next){
+  res.render('index');
+});
+

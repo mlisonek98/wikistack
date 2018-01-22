@@ -5,33 +5,30 @@ var Page = models.Page;
 var User = models.User;
 module.exports = router;
 
-
-
-
 router.post('/', function(req, res, next) {
   console.log(req.body)
-  var pageTitle = req.body.title;
-  var pageContent = req.body.content;
-  var page = Page.build({
-    title: pageTitle,
-    content: pageContent
-  });
+  var newPage = Page.build(req.body);
 
-
-  page.save().then(function(savedPage) {
-    res.redirect(savedPage.route);
+  newPage.save().then(function(savedPage) {
+    res.redirect('/');
   }).catch(next);
 
   //res.send('got to POST /wiki/');
 });
 
-router.get('/', function(req, res){
-    res.redirect('/');
-  //res.render('index')
-})
+router.get('/', function(req, res, next){
+  // res.redirect('/');
+  Page.findAll({})
+    .then(function(thePages) {
+      res.render('index', {
+        pages: thePages
+      })
+    })
+    .catch(next);
+  })
 
 router.get('/add', function(req, res) {
-  res.render('addpage')
+  res.render('addpage');
 });
 
 router.get('/:page', function (req, res, next) {
@@ -42,7 +39,15 @@ router.get('/:page', function (req, res, next) {
     }
   })
   .then(function(foundPage) {
+    if (foundPage === null) {
+      return next(new Error('That page was not found!'));
+    }
     res.render('wikipage', { page: foundPage })
   })
   .catch(next);
+})
+
+router.use(function (err, req, res, next) {
+  console.error.bind(console, err);
+  res.status(500).send(err.message);
 })
