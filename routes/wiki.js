@@ -18,17 +18,31 @@ router.post('/', function(req, res, next) {
   });
 
 
-  page.save();
-  res.json(page);
+  page.save().then(function(savedPage) {
+    res.redirect(savedPage.route);
+  }).catch(next);
+
   //res.send('got to POST /wiki/');
 });
 
-router.get('/', function(req, res, next){
+router.get('/', function(req, res){
     res.redirect('/');
   //res.render('index')
-
 })
 
-router.get('/add', function(req, res, next) {
+router.get('/add', function(req, res) {
   res.render('addpage')
 });
+
+router.get('/:page', function (req, res, next) {
+  var url = req.params.page;
+  Page.findOne({
+    where: {
+      urlTitle: url,
+    }
+  })
+  .then(function(foundPage) {
+    res.render('wikipage', { page: foundPage })
+  })
+  .catch(next);
+})

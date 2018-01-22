@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 app.use('/', routes);
 
-models.db.sync({force: true})
+models.db.sync({})
 .then(function () {
     app.listen(3000, function () {
         console.log('Server is listening on port 3000!');
